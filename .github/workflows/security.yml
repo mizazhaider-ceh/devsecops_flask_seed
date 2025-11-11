@@ -1,0 +1,54 @@
+name: Security CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  sast:
+    name: SAST Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Semgrep & deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+      - name: Run Semgrep
+        run: |
+          semgrep --config=p/ci --json --output=semgrep-results.json ./app || true
+      - name: Upload SAST results
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-results
+          path: semgrep-results.json
+
+  ai_scan:
+    name: AI-assisted Scan
+    runs-on: ubuntu-latest
+    needs: sast
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install scanner deps
+        run: |
+          pip install -r scanner/requirements.txt
+      - name: Run AI Scanner
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: |
+          python scanner/scanner.py --target ./app --sast ./semgrep-results.json --output scanner/output/ci_ai_report.md || true
+      - name: Upload AI report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-report
+          path: scanner/output/ci_ai_report.md

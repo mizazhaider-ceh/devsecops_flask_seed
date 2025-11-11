@@ -1,0 +1,5 @@
+Flask==2.0.3
+requests==2.28.1
+croniter==1.4.0
+# NOTE: Intentionally include an outdated package to simulate vulnerable dependency:
+urllib3==1.25.0

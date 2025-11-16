@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# API Keys (NEVER COMMIT!)
+.env
+*.key
+*_key.txt
+api_key.txt
+
+# Temporary files
+*.tmp
+*.log
+
+# Output reports (optional - commit if you want)
+output/*.md
+!output/.gitkeep
+
+# Semgrep results
+semgrep-results.json

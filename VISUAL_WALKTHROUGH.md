@@ -72,6 +72,15 @@
 
 ---
 
+### 9. SuccessFul CI/CD Pipeline
+
+
+![AI Scanner Code Analysis](screenshots/CI-CD%20Pipeline.png)
+
+**CI/CD Pipeline** first it failed and then i added the envirement variable in the github secrets and corrected the name in the security.yml file
+
+---
+
 ## 📊 Summary
 
 **Tools Demonstrated:**

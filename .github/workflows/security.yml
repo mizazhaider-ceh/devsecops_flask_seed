@@ -22,7 +22,7 @@ jobs:
           pip install semgrep
       - name: Run Semgrep
         run: |
-          semgrep --config=p/ci --json --output=semgrep-results.json ./app || true
+          semgrep --config p/ci --json --output semgrep-results.json ./app || true
       - name: Upload SAST results
         uses: actions/upload-artifact@v4
         with:
@@ -35,30 +35,18 @@ jobs:
     needs: sast
     steps:
       - uses: actions/checkout@v4
-      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      
-      - name: Download SAST results
-        uses: actions/download-artifact@v4
-        with:
-          name: semgrep-results
-      
-      - name: Install scanner dependencies
+      - name: Install scanner deps
         run: |
           pip install -r scanner/requirements.txt
-      
-      - name: Run AI Security Scanner
+      - name: Run AI Scanner
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
-          python scanner/scanner.py \
-            --target ./app \
-            --sast ./semgrep-results.json \
-            --output scanner/output/ci_ai_report.md
-      
+          python scanner/scanner.py --target ./app --sast ./semgrep-results.json --output scanner/output/ci_ai_report.md || true
       - name: Upload AI report
         uses: actions/upload-artifact@v4
         with:

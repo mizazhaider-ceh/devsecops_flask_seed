@@ -44,7 +44,7 @@ jobs:
           pip install -r scanner/requirements.txt
       - name: Run AI Scanner
         env:
-          LLM_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python scanner/scanner.py --target ./app --sast ./semgrep-results.json --output scanner/output/ci_ai_report.md || true
       - name: Upload AI report
